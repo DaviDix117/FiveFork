@@ -7,7 +7,7 @@ import { validateEmail } from "../../utils/validation";
 
 export default function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState(defaultFormValue()); //Guarda Toda la info de los formualrios
+    const [formData, setFormData] = useState(defaultFormValue()); //Guarda Toda la info de los formualrio
 
     const onSubmit = () => {
       if (
