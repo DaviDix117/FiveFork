@@ -1,12 +1,11 @@
 import React,{useState} from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Input, Button, Icon } from "react-native-elements";
-import { size, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { showMessage } from "react-native-flash-message";
 import * as firebase from 'firebase';
 import { useNavigation } from "@react-navigation/native";
 
-import { validateEmail } from "../../utils/validation";
 import Loading from '../Loading';
 
 export default function RegisterForm() {
@@ -18,8 +17,7 @@ export default function RegisterForm() {
     const onSubmit = () => {
       if (
         isEmpty(formData.email) ||
-        isEmpty(formData.password) ||
-        isEmpty(formData.repeatPassword)
+        isEmpty(formData.password)
       ) {
         showMessage({
             message: "Error",
@@ -27,32 +25,11 @@ export default function RegisterForm() {
             type: "danger",
             icon: "auto",
         });
-      } else if(!validateEmail(formData.email)) {
-        showMessage({
-            message: "Error",
-            description: "Email invalido",
-            type: "danger",
-            icon: "auto",
-        });
-      } else if(formData.password !== formData.repeatPassword ){
-        showMessage({
-            message: "Error",
-            description: "Las contraseñas deben de coincidir",
-            type: "danger",
-            icon: "auto",
-        });
-      } else if(size(formData.password) < 6){
-        showMessage({
-            message: "Error",
-            description: "la contraseña debe tener almenos 6 caracteres",
-            type: "danger",
-            icon: "auto",
-        });
       } else {
         setLoading(true);
         firebase
             .auth()
-            .createUserWithEmailAndPassword(formData.email, formData.password)
+            .signInWithEmailAndPassword(formData.email, formData.password)
             .then(() => {
                 showMessage({
                     message: "Correcto",
@@ -71,14 +48,20 @@ export default function RegisterForm() {
                 var errorCode = error.code;
                 var errorMessage = error.message;
 
-                if (errorCode == "auth/email-already-in-use") {
+                if (errorCode == "auth/wrong-password") {
                     showMessage({
                         message: "Error",
-                        description: "Correo electronico ya utlizado",
+                        description: "Contraseña incorrecta",
                         type: "danger",
                         icon: "auto",
                     });
-
+                } else if (errorCode == "auth/user-not-found") {    
+                    showMessage({
+                        message: "Error",
+                        description: "Correo electronico no encontrado",
+                        type: "danger",
+                        icon: "auto",
+                    });
                 } else {
                     showMessage({
                         message: "Error",
@@ -87,13 +70,12 @@ export default function RegisterForm() {
                         icon: "auto",
                     });
                 }
+
             });
       }
     };
 
     const onChange = (e, type) => {
-        // console.log(e.nativeEvent.text);
-        // setFormData({ [type]: e.nativeEvent.text });
         setFormData({ ...formData, [type]: e.nativeEvent.text })
     }
 
@@ -130,30 +112,14 @@ export default function RegisterForm() {
                 }
             />
 
-            <Input 
-                placeholder="Repetir Contraseña"
-                containerStyle={styles.inputForm}
-                onChange={(e) => onChange(e, "repeatPassword")}
-                secureTextEntry={showPassword ? false : true }
-                autoCompleteType='password'
-                rightIcon={
-                    <Icon
-                        type='material-community'
-                        name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                        color='#c1c1c1'
-                        onPress={()=> setShowPassword(!showPassword)}
-                    />
-                }
-            />
-
             <Button 
-                title="Unirse"
-                containerStyle={styles.btnContainerRegister}
-                buttonStyle={styles.btnRegister}
+                title="Iniciar sesión"
+                containerStyle={styles.btnContainerLogin}
+                buttonStyle={styles.btnLogin}
                 rightIcon={{ type: 'material-community', name: 'at', color: "#c1c1c1" }}
                 onPress={onSubmit}
             />
-            <Loading isVisible={loading} text="Creando cuenta" />
+            <Loading isVisible={loading} text="Iniciando sesión" />
         </View>
     )
 }
@@ -162,7 +128,6 @@ function defaultFormValue() {
     return{
         email: "",
         password: "",
-        repeatPassword: "",
     }
 }
 
@@ -177,11 +142,11 @@ const styles = StyleSheet.create({
         width: "100%",
         marginTop: 20,
     },
-    btnContainerRegister: {
+    btnContainerLogin: {
         marginTop: 20,
         width: "95%",
     },
-    btnRegister: {
+    btnLogin: {
         backgroundColor: "#00a680",
     }
 })

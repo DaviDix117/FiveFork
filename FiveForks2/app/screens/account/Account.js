@@ -17,7 +17,7 @@ export default function Account() {
         
     }, [])
 
-    if(login === null) return <Loading isVisible={true} text={"Cargando n.n"} />;
+    if(login === null) return <Loading isVisible={true} text={"Cargando..."} />;
 
     return login ? <UsserLogged /> : <UserGuest />
 }

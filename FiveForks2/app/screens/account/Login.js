@@ -1,7 +1,9 @@
-import React from 'react'
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+
+import LoginRegister from '../../components/account/LoginRegister';
 
 export default function Login() {
     return(
@@ -13,7 +15,7 @@ export default function Login() {
             />
             
             <View style={styles.viewContainer}>
-                <Text>Login Form</Text>
+                <LoginRegister />
 
                 <CreateAccount />
             </View>

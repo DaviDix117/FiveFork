@@ -1,7 +1,6 @@
-import React from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import React from 'react';
+import { StyleSheet, View, Image, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import RegisterForm from '../../components/account/RegisterForm'
 
