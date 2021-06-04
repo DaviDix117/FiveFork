@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from "react-native-elements";
-import { showMessage } from "react-native-flash-message";
 import * as firebase from 'firebase';
 
 import InfoUser from '../../components/account/InfoUser';
 import Loading from '../../components/Loading';
+import AccountOptions from '../../components/account/AccountOptions';
 
 
 export default function UsserLogged() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
+    const [reloadUserInfo, setReloadUserInfo] = useState(false);
 
     useEffect(() => {
         (async  () =>{
             const user = await firebase.auth().currentUser;
             setUserInfo(user);
         })()
-    }, [])
+        setReloadUserInfo(false);
+    }, [reloadUserInfo])
 
     //Salir de la session de usuario
     const logOut = () =>{
@@ -33,9 +35,13 @@ export default function UsserLogged() {
         <View style={styles.viewUserInfo}>
 
             {/*Si tiene valor se muestra. Validacion*/}
-            {userInfo && <InfoUser userInfo={userInfo} />}
+            {userInfo && <InfoUser 
+                userInfo={userInfo} 
+                setLoading={setLoading} 
+                setLoadingText={setLoadingText}  
+            />}
             
-            <Text>Account options</Text>
+            <AccountOptions userInfo={userInfo} setReloadUserInfo={setReloadUserInfo} />
 
             <Button 
                 title="Salir"
