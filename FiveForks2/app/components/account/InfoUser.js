@@ -32,6 +32,7 @@ export default function InfoUser(props) {
 
             if (result.cancelled) {
                 showMessage({
+                    message: "Error",
                     description: "cerraste la seleccion de imagenes",
                     type: "warning",
                     icon: "auto",
